@@ -1,18 +1,31 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from "vue";
+// @ts-ignore
+import { ApmVuePlugin } from "./apm/index.js";
 
-import Harlem from '@harlem/core'
+import App from "./App.vue";
 
-import { router } from './router'
+import Harlem from "@harlem/core";
 
-import registerGlobalComponents from './plugins/global-components'
-import setAuthorizationToken from './plugins/set-authorization-token'
+import { router } from "./router";
 
-const app = createApp(App)
-app.use(router)
-app.use(Harlem)
+import registerGlobalComponents from "./plugins/global-components";
+import setAuthorizationToken from "./plugins/set-authorization-token";
 
-setAuthorizationToken()
-registerGlobalComponents(app)
+const app = createApp(App);
+app.use(router);
+app.use(Harlem);
+app.use(ApmVuePlugin, {
+  router,
+  config: {
+    serviceName: "realworld-vue3",
+    serverUrl:
+      "https://632fbfef10e442db91057f72a1042806.apm.us-central1.gcp.cloud.es.io:443",
+    serviceVersion: "",
+    environment: "production",
+  },
+});
 
-app.mount('#app')
+setAuthorizationToken();
+registerGlobalComponents(app);
+
+app.mount("#app");
